@@ -8,3 +8,26 @@ from os.path import exists
 
 
 env.hosts = ['54.90.30.64', '52.90.15.99']  # <IP web-01>, <IP web-02>
+env.user = 'ubuntu' # username
+
+def do_deploy(archive_path):
+    """ distributes an archive to your  web servers
+    """
+    if exists(archive_path) is False:
+        return False
+    file_ = archive_path.split('/')[-1]
+    tmp = "/tmp/" + file_
+    archive_p = '/data/web_static/releases/' + "{}".format(file_.split('.')[0])
+
+    try:
+        put(archive_path, "/tmp/")
+        run("sudo mkdir -p {}/".format(archive_p))
+        run("sudo tar -xzf {} -C {}/".format(tmp, archive_p))
+        run("sudo rm {}".format(tmp))
+        run("sudo mv {}/web_static/* {}/".format(archive_p, archive_p))
+        run("sudo rm -rf {}/web_static".format(archive_p))
+        run("sudo rm -rf /data/web_static/current")
+        run("sudo ln -s {}/ /data/web_static/current".format(archive_p))
+        return True
+    except:
+        return False
