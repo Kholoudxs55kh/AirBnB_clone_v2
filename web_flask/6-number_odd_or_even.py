@@ -48,9 +48,10 @@ def render_if_number(n):
 def number_odd_or_even(n):
     """Render template based on conditional
     """
-    path = '6-number_odd_or_even.html'
-    return render_template(path, n=n)
-
+    flag = 'odd'
+    if n % 2 == 0:
+        flag = 'even'
+    return render_template('6-number_odd_or_even.html', n=n, state=flag)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
