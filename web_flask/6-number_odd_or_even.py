@@ -44,7 +44,7 @@ def render_if_number(n):
     return render_template('5-number.html', n=n)
 
 
-@app.route('/number_odd_or_even/<int:n>')
+@app.route('/number_odd_or_even/<int:n>', strict_slashes=False)
 def number_odd_or_even(n):
     """Render template based on conditional
     """
