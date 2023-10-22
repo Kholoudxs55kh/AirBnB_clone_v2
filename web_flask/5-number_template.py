@@ -40,7 +40,7 @@ def number(n=None):
 
 @app.route("/number_template/<int:n>", strict_slashes=False)
 def render_if_number(n):
-    """handling numbers only"""
+    """handling number only"""
     return render_template('5-number.html', n=n)
 
 
