@@ -41,7 +41,8 @@ def number(n=None):
 @app.route("/number_template/<int:n>", strict_slashes=False)
 def render_if_number(n):
     """handling numbers only"""
-    return render_template('5-number.html', n=n)
+    path = '5-number.html'
+    return render_template(path, n=n)
 
 
 if __name__ == '__main__':
