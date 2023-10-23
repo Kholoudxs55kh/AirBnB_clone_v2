@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 """This module defines a class to manage database storage for hbnb clone"""
+
 from os import getenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -7,22 +8,23 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 
 class DBStorage:
     """alchemy engine"""
+
     __engine = None
     __session = None
 
     def __init__(self):
         """wlahy t3bnaaaaa"""
-        env = getenv('HBNB_ENV')
-        user = getenv('HBNB_MYSQL_USER')
-        passwd = getenv('HBNB_MYSQL_PWD')
-        host = getenv('HBNB_MYSQL_HOST')
-        db = getenv('HBNB_MYSQL_DB')
-        self.__engine = create_engine("mysql+mysqldb://{}:{}@{}:3306/{}".format(
-            user, passwd, host, db
-        ),
-                pool_pre_ping=True)
+        env = getenv("HBNB_ENV")
+        user = getenv("HBNB_MYSQL_USER")
+        passwd = getenv("HBNB_MYSQL_PWD")
+        host = getenv("HBNB_MYSQL_HOST")
+        db = getenv("HBNB_MYSQL_DB")
+        self.__engine = create_engine(
+            "mysql+mysqldb://{}:{}@{}:3306/{}".format(user, passwd, host, db),
+            pool_pre_ping=True,
+        )
 
-        if env == 'test':
+        if env == "test":
             Base.metadata.drop_all(self.__engine)
 
     def all(self, cls=None):
@@ -32,14 +34,14 @@ class DBStorage:
         if cls:
             query = self.__session.query(cls)
             for obj in query.all():
-                _key = obj.to_dict()['__class__'] + '.' + obj.id
+                _key = obj.to_dict()["__class__"] + "." + obj.id
                 obj_dict[_key] = obj
             return obj_dict
         elif cls is None:
             for class_ in objects:
                 query = self.__session.query(class_)
                 for obj in query.all():
-                    _key = obj.to_dict()['__class__'] + '.' + obj.id
+                    _key = obj.to_dict()["__class__"] + "." + obj.id
                     obj_dict[_key] = obj
             return obj_dict
 
