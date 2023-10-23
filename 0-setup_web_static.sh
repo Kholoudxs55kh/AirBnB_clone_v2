@@ -1,40 +1,26 @@
 #!/usr/bin/env bash
-#script that sets up your web servers for the deployment of web_static
+# sets up my web servers for the deployment of web_static
 
 sudo apt-get update
 sudo apt-get -y install nginx
-sudo mkdir -p /data/web_static/releases/test/
-sudo mkdir -p /data/web_static/shared/
-echo '<html>
-  <head>
-  </head>
-  <body>
-    Holberton School
-  </body>
-</html>' | sudo tee -a /data/web_static/releases/test/index.html
+
+sudo mkdir -p /data/web_static/releases/test/ /data/web_static/shared/
+
+sudo sh -c 'echo "Hello form TutTrue >_<" >/data/web_static/releases/test/index.html'
+
 sudo ln -sf /data/web_static/releases/test/ /data/web_static/current
+sudo chown -R ubuntu:ubuntu /data/
 
-chown -R ubuntu /data/
-chgrp -R ubuntu /data/
-
-printf %s "server {
-    listen 80 default_server;
+# add config file
+sudo sh -c 'echo "
+server {
+    listen 80;
+    add_header X_Served_by \$HOSTNAME;
     listen [::]:80 default_server;
-    add_header X-Served-By $HOSTNAME;
-    root   /var/www/html;
-    index  index.html index.htm;
-
+    server_name tuttrue.tech;
     location /hbnb_static {
-        alias /data/web_static/current;
-        index index.html index.htm;
+        alias /data/web_static/current/;
     }
+}" > /etc/nginx/sites-available/default'
 
-    location /redirect_me {
-        return 301 http://cuberule.com/;
-    }
-
-    error_page 404 /404.html;
-    location /404 {
-      root /var/www/html;
-      internal;}
-}"
+sudo service nginx restart
