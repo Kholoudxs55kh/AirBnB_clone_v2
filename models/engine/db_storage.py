@@ -10,6 +10,7 @@ class DBStorage:
     """alchemy engine"""
     __engine = None
     __session = None
+    objects =  ["State", "City", "User", "Place", "Review"]
 
     def __init__(self):
         """wlahy t3bnaaaaa"""
@@ -29,7 +30,7 @@ class DBStorage:
     def all(self, cls=None):
         """won't write all of this again"""
         obj_dict = {}
-        objects = [User, State, City, Amenity, Place, Review]
+
         if cls:
             query = self.__session.query(cls)
             for obj in query.all():
@@ -37,7 +38,8 @@ class DBStorage:
                 obj_dict[_key] = obj
             return obj_dict
         elif cls is None:
-            for class_ in objects:
+            for class_ in self.objects:
+                class_ = eval(class_)
                 query = self.__session.query(class_)
                 for obj in query.all():
                     _key = obj.to_dict()['__class__'] + '.' + obj.id
@@ -73,7 +75,8 @@ class DBStorage:
         Base.metadata.create_all(self.__engine)
         safeSession = sessionmaker(bind=self.__engine, expire_on_commit=False)
         self.__session = scoped_session(safeSession)()
-
+   
     def close(self):
         """closes"""
+        self.reload()
         self.__session.close()
